@@ -11,6 +11,10 @@ on:
         description: New version of the package (tag name)
         required: true
         type: string
+      wheel_url:
+        description: 'Custom url to download wheel build (if not supple, will default to git clone)'
+        required: false
+        type: string
 
 jobs:
   update:
@@ -30,6 +34,7 @@ jobs:
         PKG_ACTION: UPDATE
         PKG_NAME: ${{ inputs.package_name }}
         PKG_VERSION: ${{ inputs.version }}
+        PKG_WHEEL_URL: ${{ inputs.wheel_url }}
       run: |
         pip install beautifulsoup4
         python .github/actions.py 

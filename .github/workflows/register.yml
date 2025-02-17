@@ -23,6 +23,10 @@ on:
         description: 'Homepage of the package (link to the github repository)'
         required: true
         type: string
+      wheel_url:
+        description: 'Custom url to download wheel build (if not supple, will default to git clone)'
+        required: false
+        type: string
 
 jobs:
   update:
@@ -45,6 +49,7 @@ jobs:
         PKG_AUTHOR: ${{ inputs.author }}
         PKG_SHORT_DESC: ${{ inputs.short_desc }}
         PKG_HOMEPAGE: ${{ inputs.homepage }}
+        PKG_WHEEL_URL: ${{ inputs.wheel_url }}
       run: |
         pip install beautifulsoup4
         python .github/actions.py 

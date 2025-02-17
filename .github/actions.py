@@ -57,8 +57,8 @@ def transform_github_url(input_url):
     return raw_url
 
 
-def register(pkg_name, version, author, short_desc, homepage):
-    link = f'git+{homepage}@{version}'
+def register(pkg_name, version, author, short_desc, homepage, wheel_url):
+    link = wheel_url if wheel_url else f'git+{homepage}@{version}'
     long_desc = transform_github_url(homepage)
     # Read our index first
     with open(INDEX_FILE) as html_file:
@@ -103,7 +103,7 @@ def register(pkg_name, version, author, short_desc, homepage):
         f.write(template)
 
 
-def update(pkg_name, version):
+def update(pkg_name, version, wheel_url):
     # Read our index first
     with open(INDEX_FILE) as html_file:
         soup = BeautifulSoup(html_file, "html.parser")
@@ -147,7 +147,7 @@ def update(pkg_name, version):
         main_version_span = soup.find('span', id='latest-main-version')
         main_version_span.string = version
     anchor.string = norm_version
-    anchor['href'] = f"git+{link}@{version}#egg={norm_pkg_name}-{norm_version}"
+    anchor['href'] = wheel_url if wheel_url else f"git+{link}@{version}#egg={norm_pkg_name}-{norm_version}"
 
     # Add it to our index
     original_div.insert_after(new_div)
@@ -191,6 +191,7 @@ def main():
             author=os.environ["PKG_AUTHOR"],
             short_desc=os.environ["PKG_SHORT_DESC"],
             homepage=os.environ["PKG_HOMEPAGE"],
+            wheel_url=os.environ["PKG_WHEEL_URL"]
         )
     elif action == "DELETE":
         delete(
@@ -199,7 +200,8 @@ def main():
     elif action == "UPDATE":
         update(
             pkg_name=os.environ["PKG_NAME"],
-            version=os.environ["PKG_VERSION"]
+            version=os.environ["PKG_VERSION"],
+            wheel_url=os.environ["PKG_WHEEL_URL"]
         )
 
 

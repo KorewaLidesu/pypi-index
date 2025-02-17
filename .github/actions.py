@@ -91,7 +91,7 @@ def register(pkg_name, version, author, short_desc, homepage, wheel_url):
     template = template.replace("_package_name", pkg_name)
     template = template.replace("_norm_version", norm_version)
     template = template.replace("_version", version)
-    template = template.replace("_link", f"{link}#egg={norm_pkg_name}-{norm_version}")
+    template = template.replace("_link", f"{link}{('#egg=' + norm_pkg_name + '-' + norm_version) if not norm_version else ''}")
     template = template.replace("_homepage", homepage)
     template = template.replace("_author", author)
     template = template.replace("_long_description", long_desc)
